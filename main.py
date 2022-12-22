@@ -1,8 +1,15 @@
 import predef
-
+import random
 from keep_alive import keep_alive
 
+#This is bot that everyday at 10:00 AM gather one of the random fix notes for game called sims
 
+
+
+
+def getTextFromSource_HTML(raw_html):
+  cleantext = predef.re.sub(predef.CLEANR, '', raw_html)
+  return cleantext
 
 def getValidChannelItemAddon(GuildChannel_id):
   for channel_id in predef.ItemAddonChannels:
@@ -15,7 +22,7 @@ def isMessageValidItemAddon(content):
   for command in predef.ItemAddonCommands:
     if content.startswith(command):
       return True
-    
+
   return False
 
 
@@ -23,56 +30,6 @@ def isMessageValidItemAddon(content):
 async def on_ready():
   print("Bot get logged in..")
 
-
-@predef.client.event # NEW MEMBER
-async def on_member_join(member):
-  print('Member {0} has joined', member.id)
-  role = predef.discord.utils.get(member.guild.roles, id=predef.DefaultRole)
-  await member.add_roles(role)
-
-
-
-@predef.client.event # REACTION ADDED
-async def on_raw_reaction_add(event):
-  
-  channel_id = getValidChannelItemAddon(event.channel_id)
-  print(channel_id)
-  if channel_id == -1:
-    return
-  
-  channel = predef.client.get_channel(channel_id)
-  message = await channel.fetch_message(event.message_id)
-  if message.author != predef.client.user:
-    return
-
-    
-  if isMessageValidItemAddon(message.content) and str(event.emoji) == predef.Button_emoji:
-    print('Member {0} has added role', event.user_id)
-    member = event.member
-    role = predef.discord.Object(message.raw_role_mentions[0])
-    await member.add_roles(role)
-  
-
-
-  
-@predef.client.event # REACTION REMOVE  
-async def on_raw_reaction_remove(event):
-  channel_id = getValidChannelItemAddon(event.channel_id)
-  if channel_id == -1:
-    return
-  channel = predef.client.get_channel(channel_id)
-  message = await channel.fetch_message(event.message_id)
-  if message.author != predef.client.user:
-    return
-
-    
-  if isMessageValidItemAddon(message.content) and str(event.emoji) == predef.Button_emoji:
-    print('Member {0} has removed role', event.user_id)
-    role = predef.discord.Object(message.raw_role_mentions[0])
-    guild = message.guild
-    member = predef.discord.utils.get(guild.members, id=event.user_id)
-    await member.remove_roles(role)
-  
 
    
 @predef.client.event # MESSAGE 
@@ -95,5 +52,46 @@ async def on_message(msg):
 
 
 
-keep_alive()
-predef.client.run(predef.os.environ['TOKEN'])
+#keep_alive()
+
+
+PageSource = predef.requests.get('https://www.ea.com/games/the-sims/the-sims-4/news/update-11-01-2022')
+SiteContent = PageSource.content.decode("utf-8")
+# get html site and turn it into readable utf-8 format
+
+StartIndex = SiteContent.find('Bug Fixes</h1>')
+EndIndex = SiteContent.find('latest-news-article-section')
+# find Bug list part
+
+SiteContent = SiteContent[StartIndex:EndIndex]
+# Cut only part with bug list
+
+
+
+SiteContent = SiteContent.split('</li>')
+# sort every bullet list item into different container
+# First and last container is always about some additional dirty html stuff
+
+RandomIndex = random.randint(1,len(SiteContent)-1)
+
+OneListItem  = predef.re.sub('<li>','', SiteContent[RandomIndex])
+OneListItem = predef.re.sub('<li>','', OneListItem)
+
+
+StartIndex = OneListItem.find('</ul>')
+EndIndex = OneListItem.find('<ul>')
+
+OneListItem = predef.re.sub(OneListItem[StartIndex:EndIndex],'',OneListItem)
+OneListItem = predef.re.sub('<ul>','', OneListItem)
+print('Index: ')
+print(RandomIndex)
+print('ContentLen: ')
+print(len(OneListItem))
+print('Content: ')
+print(OneListItem)
+
+#len = 1 mean that is empty and should be randomise again
+
+
+
+#predef.client.run(predef.os.environ['TOKEN'])
