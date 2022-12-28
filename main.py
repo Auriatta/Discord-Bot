@@ -15,13 +15,21 @@ from keep_alive import keep_alive
 #keep_alive()
 
 
-sims4WebSite = website_maintance.html_sims_getter()
+sims4WebSite = website_maintance.html_raw_formater()
 
-siteContent = sims4WebSite.getWebsiteContent('https://www.ea.com/games/the-sims/the-sims-4/news/update-11-01-2022')
+siteContent = sims4WebSite.getWebSiteContent('https://www.ea.com/games/the-sims/the-sims-4/news/update-07-26-2022')
+print('Content site size: ', len(siteContent), ' bytes')
+siteContent = sims4WebSite.getWebSiteSpecificPart('Bug Fixes', '<', 'Related News', '<', siteContent)
 
-siteContent = sims4WebSite.getArrayBugFixListWebSitePart('Bug Fixes</h1>','latest-news-article-section', siteContent)
+#siteContent = sims4WebSite.splitIntoList(siteContent)ń
 
-print(sims4WebSite.getOneValidListItem(siteContent, predef.random.randint(0, len(siteContent))))
+#siteContent = sims4WebSite.formatContentList(siteContent)
+#sims4WebSite.getOneValidListItem(siteContent, predef.random.randint(0, len(siteContent)))
+#index = predef.random.randint(0, len(newsiteContent))
+
+print('Content site size reduced to: ', len(siteContent), ' bytes')
+print('Content view:')
+print(siteContent)
 
 
 #predef.client.run(predef.os.environ['TOKEN'])
