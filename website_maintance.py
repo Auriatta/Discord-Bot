@@ -14,20 +14,8 @@ class html_raw_formater:
     def getIndexRangeByKeywords(keyword1, keyword2, content):
         StartIndex = content.find(keyword1)
         EndIndex = content.find(keyword2)
-        return (StartIndex, EndIndex)
-
-    @staticmethod
-    def excludeIntoListBySpecificSyntax(startSyntax, endSyntax, content):
-        listedContent = []
-
-        while 1 :
-            indexRange = html_raw_formater.getIndexRangeByKeywords(startSyntax, endSyntax, content)
-            if indexRange[0] == -1 or indexRange[1] == -1:
-                break
-            listedContent.append(content[indexRange[0] + len(startSyntax) : indexRange[1]])
-            content = str(content).replace(content[indexRange[0] + len(startSyntax) : indexRange[1]], '')
-
-        return listedContent
+        return (StartIndex, EndIndex)        
+            
 
     @staticmethod
     def getWebSiteSpecificPart(keyword_1, keyword_1_validation, keyword_2, keyword_2_validation, content):
@@ -98,13 +86,12 @@ class html_raw_formater:
 
 
     @staticmethod
-    def formatListItem( content):
+    def formatListItem(content):
 
         OneListItem = re.sub('<li>','', content)
 
         StartIndex = OneListItem.find('</ul>')
         EndIndex = OneListItem.find('<ul>')
-        print(OneListItem)
         OneListItem = re.sub(OneListItem[StartIndex:EndIndex],'',OneListItem)
         OneListItem = re.sub('<ul>','', OneListItem)
 
@@ -122,22 +109,6 @@ class html_raw_formater:
         #len = 1 mean that is empty
         return OneListItem
 
-
-    @staticmethod
-    def splitIntoList(content):
-
-        content = content.split('</li>')
-        # sort every bullet list item into different container
-       
-        del content[0]
-        # First and last container is always about some additional dirty html stuff
-
-        for item in content:
-            if len(item) < 3:
-                content.remove(item)
-        # Reomve empty list items
-
-        return content
 
 
     
