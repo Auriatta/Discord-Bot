@@ -1,3 +1,5 @@
+import predef
+
 import discord
 intents = discord.Intents.default()
 intents.members = True 

@@ -1,10 +1,6 @@
-import os
+import datetime
 import random
 
+random.seed(datetime.datetime.now().day * (1 + datetime.datetime.now().microsecond))
 
-
-
-
-Website_Adress_Sims4 = 'https://www.ea.com/games/the-sims/the-sims-4/news/update-11-01-2022'
-DiscordChannelID = ''
-
+urls = ['https://www.ea.com/games/the-sims/the-sims-4/news/update-08-02-2022', 'https://www.ea.com/games/the-sims/the-sims-4/news/update-07-26-2022']
