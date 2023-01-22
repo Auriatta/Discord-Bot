@@ -1,5 +1,7 @@
+import discord_bot
+from discord_bot import client
 import website_script
-import discord_maintance
+import predef
 from keep_alive import keep_alive
 
 
@@ -10,11 +12,5 @@ from keep_alive import keep_alive
 
 #keep_alive()
 
+discord_bot.client.run(predef.os.environ['TOKEN'])
 
-website_script.getOneRandomBugFixListItemFromSimsGameSite()
-
-
-
-#Send it to discord
-
-#predef.client.run(predef.os.environ['TOKEN'])

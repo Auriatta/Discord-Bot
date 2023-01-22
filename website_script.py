@@ -5,8 +5,6 @@ import website_maintance
 import re
 
 
-
-
 def getOneRandomBugFixListItemFromSimsGameSite():
     url = urls[random.randint(0, (len(urls) - 1) )]
 
