@@ -1,4 +1,5 @@
 import requests
+import datetime
 import re
 
 def getWebsiteContentAsUTF8(adress):
@@ -19,4 +20,10 @@ def getAllSolidTextLinesWith_ulList_syntax(Content):
 def removeHTMLsyntax(Content):
     Content = re.sub(r"&.*?;",'', Content)
     Content = re.sub(r"<.*?>",'', Content)
+    return Content
+
+def removeSpecialKeys(Content):
+    Content = re.sub('\n','', Content)
+    Content = re.sub('\r','', Content)
+    Content = re.sub('\t','', Content)
     return Content

@@ -1,8 +1,23 @@
 import predef
-from predef import urls
+from predef import Sims4MainNewsUrl
 from predef import random
 import website_maintance
 import re
+
+def getAllUpdateSitesFromMainNewsSite(url):
+    siteContent = website_maintance.getWebsiteContentAsUTF8(url)
+    siteContent = website_maintance.removeSpecialKeys(siteContent)
+    
+    urls_extentions = re.findall(r"Update ..?\/..\/....", siteContent)
+    urls_extentions_formated = []
+
+
+    for url_ext in urls_extentions:
+        url_ext = url_ext.replace('U', 'u')
+        urls_extentions_formated.append(url + '/' + re.sub(r"[ /]", '-', url_ext))
+    
+    return urls_extentions_formated
+
 
 def getBugFixListGroupsFromWebsite(url):
     siteContent = website_maintance.getWebsiteContentAsUTF8(url)
@@ -10,13 +25,13 @@ def getBugFixListGroupsFromWebsite(url):
     print('Site target url: ', url)
     print('Content site size: ', len(siteContent), ' bytes')
 
+    siteContent = website_maintance.removeSpecialKeys(siteContent)
 
-    siteContent = re.sub('\n','', siteContent)
-    siteContent = re.sub('\r','', siteContent)
-    siteContent = re.sub('\t','', siteContent)
-
-    siteContent = re.search(r"Bug Fixes<.(.*)</div>", siteContent).group(1)
-
+    try:
+        siteContent = re.search(r"Bug Fixes<.(.*)</div>", siteContent).group(1)
+    except:
+        return []
+    
     siteContent = re.sub(r"<ul.*?>", "<ul>", siteContent)
 
     print('Content site size reduced to: ', len(siteContent), ' bytes')
@@ -27,7 +42,7 @@ def getBugFixListGroupsFromWebsite(url):
 
     return siteContent_GroupsOfTargetLists
 
-def gatherAndSyncBugFixesFromAllAvailableWebsites():
+def gatherAndSyncBugFixesFromAllAvailableWebsites(urls):
     siteContent_GroupsOfTargetLists = []
     for url in urls:
         siteContent_GroupsOfTargetLists += getBugFixListGroupsFromWebsite(url)
@@ -38,7 +53,8 @@ def gatherAndSyncBugFixesFromAllAvailableWebsites():
 
 def getOneRandomBugFixListItemFromSimsGameSite():
     
-    siteContent_GroupsOfTargetLists = gatherAndSyncBugFixesFromAllAvailableWebsites()
+    siteExtentionedUrls = getAllUpdateSitesFromMainNewsSite(Sims4MainNewsUrl)
+    siteContent_GroupsOfTargetLists = gatherAndSyncBugFixesFromAllAvailableWebsites(siteExtentionedUrls)
     siteContent_RandomPickedListGroup = siteContent_GroupsOfTargetLists[random.randint(0, (len(siteContent_GroupsOfTargetLists) - 1) )]
     siteContent_RandomPickedListGroup = re.sub(r"<[/]?ul>",'', siteContent_RandomPickedListGroup)
 
