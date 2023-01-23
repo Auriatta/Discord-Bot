@@ -11,7 +11,7 @@ def getAllSolidTextLinesWith_ulList_syntax(Content):
     Content_GroupsOfTargetLists = re.findall(r"<ul><li>.*?<\/li><\/ul>",Content)
 
     for TargetGroupListContent in Content_GroupsOfTargetLists:
-        if re.match(r"(?!class=).*", TargetGroupListContent) != None:
+        if re.match(r".*(class=).*", TargetGroupListContent) != None:
             Content_GroupsOfTargetLists.remove(TargetGroupListContent)
 
     return Content_GroupsOfTargetLists

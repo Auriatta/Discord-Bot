@@ -12,5 +12,5 @@ from keep_alive import keep_alive
 
 #keep_alive()
 
-discord_bot.client.run(predef.os.environ['TOKEN'])
-
+#discord_bot.client.run(predef.os.environ['TOKEN'])
+website_script.getOneRandomBugFixListItemFromSimsGameSite()

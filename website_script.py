@@ -4,10 +4,7 @@ from predef import random
 import website_maintance
 import re
 
-
-def getOneRandomBugFixListItemFromSimsGameSite():
-    url = urls[random.randint(0, (len(urls) - 1) )]
-
+def getBugFixListGroupsFromWebsite(url):
     siteContent = website_maintance.getWebsiteContentAsUTF8(url)
 
     print('Site target url: ', url)
@@ -24,9 +21,24 @@ def getOneRandomBugFixListItemFromSimsGameSite():
 
     print('Content site size reduced to: ', len(siteContent), ' bytes')
 
-        
     siteContent_GroupsOfTargetLists = website_maintance.getAllSolidTextLinesWith_ulList_syntax(siteContent)
 
+    
+
+    return siteContent_GroupsOfTargetLists
+
+def gatherAndSyncBugFixesFromAllAvailableWebsites():
+    siteContent_GroupsOfTargetLists = []
+    for url in urls:
+        siteContent_GroupsOfTargetLists += getBugFixListGroupsFromWebsite(url)
+
+    return siteContent_GroupsOfTargetLists
+
+
+
+def getOneRandomBugFixListItemFromSimsGameSite():
+    
+    siteContent_GroupsOfTargetLists = gatherAndSyncBugFixesFromAllAvailableWebsites()
     siteContent_RandomPickedListGroup = siteContent_GroupsOfTargetLists[random.randint(0, (len(siteContent_GroupsOfTargetLists) - 1) )]
     siteContent_RandomPickedListGroup = re.sub(r"<[/]?ul>",'', siteContent_RandomPickedListGroup)
 
